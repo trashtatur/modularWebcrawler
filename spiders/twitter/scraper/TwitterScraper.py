@@ -1,18 +1,15 @@
 import scrapy
+from spiders.RegisteredModules import REGISTERED_MODULES,register_module
 
 
+@register_module
 class TwitterSpider(scrapy.Spider):
     name = "TwitterSpider"
-    start_urls = []
+    start_urls = ["https://twitter.com/hashtag/maga"]
 
-    def __init__(self, hashtags, **kwargs):
-        super().__init__(**kwargs)
-        self.hashtags = hashtags
-        self.start_urls = self.define_urls()
-
-    def define_urls(self):
+    def define_urls(hashtags):
         start_urls = []
-        for hashtag in self.hashtags:
+        for hashtag in hashtags:
             start_urls.append("https://twitter.com/hashtag/" + str(hashtag))
         return start_urls
 
