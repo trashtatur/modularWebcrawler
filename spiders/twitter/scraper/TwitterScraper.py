@@ -1,6 +1,6 @@
 from _datetime import datetime
 from urllib.parse import quote
-from spiders.twitter.items import Tweet
+from spiders.twitter.items import Tweet, TweetLoader, MetaItemsLoader
 import json
 import logging
 from scrapy.spiders import CrawlSpider
@@ -42,58 +42,74 @@ class TwitterSpider(CrawlSpider):
         for item in self.parse_tweet_item(items):
             yield item
 
-
-    def parse_tweet_item(self,items):
+    def parse_tweet_item(self, items):
         for item in items:
             try:
-                tweet = Tweet()
+                tweet = TweetLoader()
+                meta = MetaItemsLoader()
 
-                tweet['usernameTweet'] = \
+                username_tweet = \
                     item.xpath('.//span[@class="username u-dir u-textTruncate"]/b/text()').extract()[0]
+
+                tweet.add_value('usernameTweet', username_tweet)
+                ### get text content
+
+                text = ' '.join(
+                    item.xpath('.//div[@class="js-tweet-text-container"]/p//text()')
+                        .extract()) \
+                    .replace(' # ', '#')\
+                    .replace(' @ ', '@')
+
+                if text == '':
+                    # If there is not text, we ignore the tweet
+                    continue
+                tweet.add_value('text', text)
+
+                ### get meta data -----------------------------------------------
 
                 ID = item.xpath('.//@data-tweet-id').extract()
                 if not ID:
                     continue
-                tweet['ID'] = ID[0]
+                meta.add_value('ID', ID)
 
-                ### get text content
-                tweet['text'] = ' '.join(
-                    item.xpath('.//div[@class="js-tweet-text-container"]/p//text()').extract()).replace(' # ',
-                                                                                                        '#').replace(
-                    ' @ ', '@')
-                if tweet['text'] == '':
-                    # If there is not text, we ignore the tweet
-                    continue
+                url = item.xpath('.//@data-permalink-path').extract()[0]
+                meta.add_value('url', url)
 
-                ### get meta data
-                tweet['url'] = item.xpath('.//@data-permalink-path').extract()[0]
-
-                retweets = item.css('span.ProfileTweet-action--retweet > span.ProfileTweet-actionCount').xpath(
-                    '@data-tweet-stat-count').extract()
+                retweets = item.css('span.ProfileTweet-action--retweet > span.ProfileTweet-actionCount')\
+                    .xpath('@data-tweet-stat-count')\
+                    .extract()
                 if retweets:
-                    tweet['retweets'] = int(retweets[0])
+                    meta.add_value('retweets', int(retweets[0]))
                 else:
-                    tweet['retweets'] = 0
+                    meta.add_value('retweets', 0)
 
-                favorites = item.css('span.ProfileTweet-action--favorite > span.ProfileTweet-actionCount').xpath(
-                    '@data-tweet-stat-count').extract()
+                favorites = item.css('span.ProfileTweet-action--favorite > span.ProfileTweet-actionCount')\
+                    .xpath('@data-tweet-stat-count')\
+                    .extract()
+
                 if favorites:
-                    tweet['favorites'] = int(favorites[0])
+                    meta.add_value('favorites', int(favorites[0]))
                 else:
-                    tweet['favorites'] = 0
+                    meta.add_value('favorites', 0)
 
-                replies = item.css('span.ProfileTweet-action--reply > span.ProfileTweet-actionCount').xpath(
-                    '@data-tweet-stat-count').extract()
+                replies = item.css('span.ProfileTweet-action--reply > span.ProfileTweet-actionCount')\
+                    .xpath('@data-tweet-stat-count')\
+                    .extract()
+
                 if replies:
-                    tweet['replies'] = int(replies[0])
+                    meta.add_value('replies', int(replies[0]))
                 else:
-                    tweet['replies'] = 0
+                    meta.add_value('replies', 0)
 
-                tweet['datetime'] = datetime.fromtimestamp(int(
-                    item.xpath('.//div[@class="stream-item-header"]/small[@class="time"]/a/span/@data-time').extract()[
-                        0])).strftime('%Y-%m-%d %H:%M:%S')
+                date_time = datetime.fromtimestamp(int(
+                    item.xpath('.//div[@class="stream-item-header"]/small[@class="time"]/a/span/@data-time')
+                        .extract()[0]))\
+                    .strftime('%Y-%m-%d %H:%M:%S')
 
-                yield tweet
+                meta.add_value('datetime', date_time)
+                tweet.add_value('meta', meta.load_item())
+
+                yield tweet.load_item()
 
             except:
                 logger.error("Error tweet:\n%s" % item.xpath('.').extract()[0])

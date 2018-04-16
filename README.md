@@ -23,3 +23,56 @@ For further information look at the twitter module
 Twitter Module pretty much copied from : https://github.com/jonbakerfish/TweetScraper
 
 Scrapy Documentation: https://doc.scrapy.org/en/latest/
+
+## Module Output
+
+A Module should always output in the following format:
+```json
+{
+some:
+keys:
+here:
+
+meta: {
+    someOther:
+    keysOrSo:
+    hereOrWhat:
+    }
+}
+```
+This output can be ensured by defining items and itemloaders according to this format
+
+```python
+class MetaItem(Item):
+    some = Field()
+    key = Field()
+    here = Field()
+
+
+class MainItem(Item):
+    some = Field()
+    key = Field()
+    here = Field()
+    meta = Field(serializer = MetaItem)
+
+
+class MainLoader(ItemLoader):
+    default_item_class = MainItem
+    default_output_processor = TakeFirst()
+
+
+class MetaLoader(ItemLoader):
+    default_item_class = MetaItem
+    default_output_processor = TakeFirst()
+```
+
+And then, such items can be populated in the following way
+
+```python
+main = MainLoader()
+meta = MetaLoader()
+main.add_value('key', value)
+meta.add_value('key', value)
+main.add_value('meta', meta.load_item())
+yield main.load_item()
+```
