@@ -22,4 +22,3 @@ def run_all_modules():
     process.start()
 
 
-run_all_modules()
