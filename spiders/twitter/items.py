@@ -3,7 +3,7 @@
 # Define here the models for your scraped items
 from scrapy import Item, Field
 from scrapy.loader import ItemLoader
-from scrapy.contrib.loader.processor import TakeFirst
+from scrapy.loader.processors import TakeFirst
 
 
 class MetaItems(Item):

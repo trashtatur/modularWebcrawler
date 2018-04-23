@@ -1,6 +1,15 @@
 # README FOR WEBCRAWLER
 
-- Dependancies : ``scrapie``
+- Dependancies : 
+    
+     ``scrapie``
+    
+     ``flask``
+     
+## Start the App
+
+- Execute ``frontend.frontend.py``
+- Open your browser and go to ``localhost:5000/``
 
 ## Create a Module
 
@@ -16,6 +25,22 @@ Then put ``@register_module`` above the classname.
 If the module implements a method that scrapie can recognize, such as ``parse`` or ``start_requests`` it should start
 fine.
 
+Since modules must implement the name variable we shall make use of it:
+
+Modules are required to implement the following variable in the ``__init__``
+function of the crawler:
+```python
+from SearchStrings import SEARCHSTRINGS
+class Module:
+    name="NAME"
+    def __init__(self):
+        self.query = SEARCHSTRINGS[Module.name]
+
+```
+its important to reference the module name and pull it from the ``SEARCHSTRINGS``
+collection! The instance variable itself can have any name. Its important
+where it gets its data from!
+
 For further information look at the twitter module
 
 ## Documentation
@@ -29,20 +54,24 @@ Scrapy Documentation: https://doc.scrapy.org/en/latest/
 A Module should always output in the following format:
 ```json
 {
-some:
-keys:
-here:
+"some": "some",
+"keys": "keys",
+"here": "here",
 
-meta: {
-    someOther:
-    keysOrSo:
-    hereOrWhat:
+"meta": {
+    "someOther": "someOther",
+    "keysOrSo": "keysOrSo",
+    "hereOrWhat": "hereOrWhat"
     }
 }
 ```
 This output can be ensured by defining items and itemloaders according to this format
 
 ```python
+from scrapy import Item, Field
+from scrapy.loader import ItemLoader
+from scrapy.loader.processors import TakeFirst
+
 class MetaItem(Item):
     some = Field()
     key = Field()
@@ -69,7 +98,9 @@ class MetaLoader(ItemLoader):
 And then, such items can be populated in the following way
 
 ```python
-main = MainLoader()
+import MetaLoader
+import MainLoader
+main:MainLoader  = MainLoader()
 meta = MetaLoader()
 main.add_value('key', value)
 meta.add_value('key', value)

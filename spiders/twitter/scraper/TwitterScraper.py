@@ -1,10 +1,11 @@
 from _datetime import datetime
 from urllib.parse import quote
-from spiders.twitter.items import Tweet, TweetLoader, MetaItemsLoader
+from spiders.twitter.items import TweetLoader, MetaItemsLoader
 import json
 import logging
 from scrapy.spiders import CrawlSpider
 from scrapy import http, Selector
+from SearchStrings import SEARCHSTRINGS
 
 from spiders.RegisteredModules import REGISTERED_MODULES, register_module
 
@@ -15,14 +16,14 @@ logger = logging.getLogger(__name__)
 class TwitterSpider(CrawlSpider):
     name = "TwitterSpider"
 
-    def __init__(self, *a, **kwargs):
-        super().__init__(*a, **kwargs)
+    def __init__(self):
         self.lang = "en"
+        self.query = SEARCHSTRINGS[TwitterSpider.name]
         self.url = "https://twitter.com/i/search/timeline?l={}".format(self.lang)
         self.url += "&q=%s&src=typed&max_position=%s"
 
     def start_requests(self):
-        url = self.url % (quote("#maga"), '')
+        url = self.url % (quote(self.query), '')
         yield http.Request(url, callback=self.parse_page)
 
     def parse_page(self, response):
@@ -32,7 +33,7 @@ class TwitterSpider(CrawlSpider):
             yield item
 
         min_position = data['min_position']
-        url = self.url % (quote("#maga"), min_position)
+        url = self.url % (quote(self.query), min_position)
         yield http.Request(url, callback=self.parse_page)
 
     def parse_tweets_block(self, html_page):

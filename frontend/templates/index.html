@@ -5,33 +5,32 @@
     <title>MOOD - App</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="static/main.css">
-    <script src="static/js/jquery-3.3.1.min.js"></script>
+    <script src="static/js/jquery-3.3.1.min.js" ></script>
+    <script src="static/js/sendData.js" ></script>
 
 </head>
 
 <body>
 <h2 class="MainTitle">MOOD APP</h2>
-<button id="buttonStart" type="button">CLICK ME BABY</button>
-<script>
-$(function() {
-    $('#buttonStart').click(function() {
-
-        $.ajax({
-            url: '/startup',
-            data: [2,3,4],
-            type: 'POST',
-            success: function(response) {
-                console.log(response);
-                console.log("SUCCESS")
-            },
-            error: function(error) {
-                console.log(error);
-                console.log("FAILURE")
-            }
-        });
-    });
-});
-</script>
+<div>
+    <table class="ModuleTable">
+        <tr>
+            {% for module in moduleNames %}
+            <th>{{module.name}}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for module in moduleNames %}
+            <td>
+                <form>
+                <label><input type="text" placeholder="SUCHE" name="search1" id={{module.name}}></label>
+                </form>
+            </td>
+            {% endfor %}
+        </tr>
+    </table>
+</div>
+<button id="buttonStart" type="button" onclick=sendData()>SUBMIT CRAWL REQUESTS</button>
 
 </body>
 </html>

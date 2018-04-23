@@ -4,6 +4,7 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 import logging
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -11,7 +12,6 @@ def run_all_modules():
 
     process = CrawlerProcess(get_project_settings())
     configure_logging()
-
     for module in REGISTERED_MODULES:
         try:
             process.crawl(module)
@@ -20,5 +20,3 @@ def run_all_modules():
             logger.critical("Module " + module.name + " could not be started")
 
     process.start()
-
-
