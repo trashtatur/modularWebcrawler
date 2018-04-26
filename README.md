@@ -1,10 +1,13 @@
 # README FOR WEBCRAWLER
 
 - Dependancies : 
+    - Install with ``pip install -r requirements.txt --user``
     
-     ``scrapie``
+     ``scrapy``
     
      ``flask``
+     
+     ``pika``
      
 ## Start the App
 
