@@ -10,8 +10,8 @@
      ``pika``
      
 ## Start the App
-
-- Execute ``frontend.frontend.py``
+- cd to the root folder of the webcrawler
+- Execute ``python -m frontend.frontend.py``
 - Open your browser and go to ``localhost:5000/``
 
 ## Create a Module

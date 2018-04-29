@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
-from contextlib import redirect_stdout
-from ModuleFactory import run_all_modules
+import ModuleFactory
 from SearchStrings import SEARCHSTRINGS
 from spiders.RegisteredModules import REGISTERED_MODULES
 
@@ -18,7 +17,7 @@ def startup():
     for thing in request.form:
         SEARCHSTRINGS[thing] = request.form[thing]
 
-    run_all_modules()
+    ModuleFactory.run_all_modules()
 
 
     return "200"
