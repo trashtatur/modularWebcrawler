@@ -46,6 +46,11 @@ its important to reference the module name and pull it from the ``SEARCHSTRINGS`
 collection! The instance variable itself can have any name. Its important
 where it gets its data from!
 
+The Custom settings import and declaration makes the spider able to work and
+not to be blocked by remote sites! So do that.
+
+The Spider does not have to be named "NAME". That is just an example!
+
 For further information look at the twitter module
 
 ## Documentation
