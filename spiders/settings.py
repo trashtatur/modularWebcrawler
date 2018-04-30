@@ -5,6 +5,10 @@ custom_settings = {
     "USER_AGENT": 'webcrawler (www.yourcoon.de) by HAW Hamburg germany',
     "ROBOTSTXT_OBEY": True,
     "DOWNLOAD_DELAY": 2,
+    "ITEM_PIPELINES": {
+        #'webcrawler.pipelines.RabbitMQPipeline':100
+        #'webcrawler.pipelines.WebcrawlerPipeline': 300,
+    }
 
 
 
