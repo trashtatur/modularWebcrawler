@@ -6,6 +6,7 @@ import logging
 from scrapy.spiders import CrawlSpider
 from scrapy import http, Selector
 from SearchStrings import SEARCHSTRINGS
+from spiders.settings import custom_settings
 
 from spiders.RegisteredModules import REGISTERED_MODULES, register_module
 
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 @register_module
 class TwitterSpider(CrawlSpider):
     name = "TwitterSpider"
+    custom_settings = custom_settings
 
     def __init__(self):
         self.lang = "en"

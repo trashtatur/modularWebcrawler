@@ -23,4 +23,4 @@ def startup():
     return "200"
 
 
-mood.run()
+mood.run(host='0.0.0.0')

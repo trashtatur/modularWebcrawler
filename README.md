@@ -34,8 +34,10 @@ Modules are required to implement the following variable in the ``__init__``
 function of the crawler:
 ```python
 from SearchStrings import SEARCHSTRINGS
+from spiders.settings import custom_settings
 class Module:
     name="NAME"
+    custom_settings = custom_settings
     def __init__(self):
         self.query = SEARCHSTRINGS[Module.name]
 

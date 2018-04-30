@@ -31,7 +31,7 @@ DOWNLOAD_DELAY = 2
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
-
+DUPEFILTER_DEBUG = True
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
 
@@ -65,7 +65,7 @@ DOWNLOAD_DELAY = 2
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'webcrawler.pipelines.RabbitMQPipeline':100
+    #'webcrawler.pipelines.RabbitMQPipeline':100
     #'webcrawler.pipelines.WebcrawlerPipeline': 300,
 }
 
