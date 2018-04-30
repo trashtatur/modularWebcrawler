@@ -10,9 +10,19 @@
      ``pika``
      
 ## Start the App
+
+### Directly
+
 - cd to the root folder of the webcrawler
 - Execute ``python -m frontend.frontend.py``
-- Open your browser and go to ``localhost:5000/``
+- Open your browser and go to ``http://0.0.0.0:5000``
+
+### With Docker
+
+- cd to the root folder of the webcrawler
+- execute ``docker build -t webcrawler:latest .``
+- execute ``docker run -it -p 5000:5000 webcrawler`` 
+- Open your browser and go to ``http://0.0.0.0:5000``
 
 ## Create a Module
 
