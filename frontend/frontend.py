@@ -7,7 +7,7 @@ from flask_socketio import SocketIO
 
 
 mood = Flask(__name__)
-#socketio = SocketIO(mood)
+socketio = SocketIO(mood)
 
 
 @mood.route("/")
@@ -15,14 +15,12 @@ def main():
     return render_template('index.html', moduleNames=REGISTERED_MODULES)
 
 
-@mood.route('/receiveData', methods=['POST'])
-#@socketio.on('receiveData')
-def startup():
-    for thing in request.form:
-        SEARCHSTRINGS[thing] = request.form[thing]
+@socketio.on('##SEND_DATA')
+def startup(data):
+    for thing in data['data']:
+        SEARCHSTRINGS[thing] = data['data'][thing]
 
     run_all_modules()
-    return "200"
 
 
 @mood.route("/stopCrawler", methods=['POST'])
@@ -32,4 +30,4 @@ def stop_crawler():
     return "200"
 
 
-mood.run(host='0.0.0.0')
+socketio.run(mood, host='0.0.0.0')

@@ -1,3 +1,8 @@
+import os
+import signal
+
+from scrapy.exceptions import CloseSpider
+
 from spiders.RegisteredModules import REGISTERED_MODULES
 from scrapy.utils.log import configure_logging
 from twisted.internet import reactor
@@ -21,11 +26,10 @@ def run_all_modules():
     d = runner.join()
     d.addBoth(lambda _: reactor.stop())
     reactor.run(installSignalHandlers=False)
-    d.close()
 
 
 def stop_all_modules():
-    runner.stop()
+    os.kill(os.getpid(), signal.SIGSTOP)
 
 
 if __name__ == '__main__':

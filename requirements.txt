@@ -2,3 +2,4 @@ scrapy
 flask
 pika
 flask-socketio
+eventlet

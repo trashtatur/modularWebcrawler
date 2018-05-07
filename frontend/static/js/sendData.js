@@ -1,6 +1,8 @@
 
 
 function sendData() {
+
+var socket = io.connect('http://' + document.domain + ':' + location.port);
     /**
      * Table of modules
      * @type {HTMLCollectionOf<table>}
@@ -16,23 +18,5 @@ function sendData() {
         names[name]=searchString;
     }
 
-   // $(function() {
-   // $('#buttonStart').click(function() {
-
-        $.ajax({
-            url: '/receiveData',
-            data:  names,
-            type: 'POST',
-            success: function(response) {
-                console.log(response);
-                console.log("SUCCESS")
-            },
-            error: function(error) {
-                console.log(error);
-                console.log("FAILURE")
-            }
-        });
-    //});
-//});
-
+    socket.emit('##SEND_DATA',{data : names})
 }

@@ -2,6 +2,7 @@ from _datetime import datetime
 from urllib.parse import quote
 from spiders.items import MetaItemsLoader, PostContentLoader, MainLoader
 from spiders.twitter.items import SiteSpecificLoader, TwitterSpecificLoader
+from spiders.rabbitMQPipe import RabbitMQPipeline
 import json
 import logging
 from scrapy.spiders import CrawlSpider
@@ -12,6 +13,7 @@ from spiders.settings import custom_settings
 from spiders.RegisteredModules import register_module
 
 logger = logging.getLogger(__name__)
+rabbit = RabbitMQPipeline()
 
 
 @register_module
@@ -122,7 +124,8 @@ class TwitterSpider(CrawlSpider):
                 main.add_value('postContent', post_content.load_item())
                 main.add_value('meta', meta.load_item())
 
-                yield main.load_item()
+                #yield main.load_item()
+                rabbit.process_item(main.load_item())
 
             except:
                 logger.error("Error tweet:\n%s" % item.xpath('.').extract()[0])
