@@ -6,11 +6,11 @@ from scrapy.utils.project import get_project_settings
 import logging
 
 logger = logging.getLogger(__name__)
+runner = CrawlerRunner(get_project_settings())
 
 
 def run_all_modules():
     configure_logging()
-    runner = CrawlerRunner(get_project_settings())
     for module in REGISTERED_MODULES:
         try:
             runner.crawl(module)
@@ -21,3 +21,12 @@ def run_all_modules():
     d = runner.join()
     d.addBoth(lambda _: reactor.stop())
     reactor.run(installSignalHandlers=False)
+    d.close()
+
+
+def stop_all_modules():
+    runner.stop()
+
+
+if __name__ == '__main__':
+    run_all_modules()

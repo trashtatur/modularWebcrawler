@@ -1,6 +1,7 @@
 from _datetime import datetime
 from urllib.parse import quote
-from spiders.twitter.items import TweetLoader, MetaItemsLoader
+from spiders.items import MetaItemsLoader, PostContentLoader, MainLoader
+from spiders.twitter.items import SiteSpecificLoader, TwitterSpecificLoader
 import json
 import logging
 from scrapy.spiders import CrawlSpider
@@ -8,7 +9,7 @@ from scrapy import http, Selector
 from SearchStrings import SEARCHSTRINGS
 from spiders.settings import custom_settings
 
-from spiders.RegisteredModules import REGISTERED_MODULES, register_module
+from spiders.RegisteredModules import register_module
 
 logger = logging.getLogger(__name__)
 
@@ -48,13 +49,16 @@ class TwitterSpider(CrawlSpider):
     def parse_tweet_item(self, items):
         for item in items:
             try:
-                tweet = TweetLoader()
+                main = MainLoader()
+                post_content = PostContentLoader()
                 meta = MetaItemsLoader()
+                siteSpecific = SiteSpecificLoader()
+                twitterSpecific = TwitterSpecificLoader()
 
                 username_tweet = \
                     item.xpath('.//span[@class="username u-dir u-textTruncate"]/b/text()').extract()[0]
 
-                tweet.add_value('usernameTweet', username_tweet)
+                post_content.add_value('user', username_tweet)
                 ### get text content
 
                 text = ' '.join(
@@ -66,43 +70,45 @@ class TwitterSpider(CrawlSpider):
                 if text == '':
                     # If there is not text, we ignore the tweet
                     continue
-                tweet.add_value('text', text)
+                post_content.add_value('text', text)
 
-                ### get meta data -----------------------------------------------
+                ### get twitterSpecific data -----------------------------------------------
 
                 ID = item.xpath('.//@data-tweet-id').extract()
                 if not ID:
                     continue
-                meta.add_value('ID', ID)
-
-                url = item.xpath('.//@data-permalink-path').extract()[0]
-                meta.add_value('url', url)
+                twitterSpecific.add_value('ID', ID)
 
                 retweets = item.css('span.ProfileTweet-action--retweet > span.ProfileTweet-actionCount')\
                     .xpath('@data-tweet-stat-count')\
                     .extract()
                 if retweets:
-                    meta.add_value('retweets', int(retweets[0]))
+                    twitterSpecific.add_value('retweets', int(retweets[0]))
                 else:
-                    meta.add_value('retweets', 0)
+                    twitterSpecific.add_value('retweets', 0)
 
                 favorites = item.css('span.ProfileTweet-action--favorite > span.ProfileTweet-actionCount')\
                     .xpath('@data-tweet-stat-count')\
                     .extract()
 
                 if favorites:
-                    meta.add_value('favorites', int(favorites[0]))
+                    twitterSpecific.add_value('favorites', int(favorites[0]))
                 else:
-                    meta.add_value('favorites', 0)
+                    twitterSpecific.add_value('favorites', 0)
 
                 replies = item.css('span.ProfileTweet-action--reply > span.ProfileTweet-actionCount')\
                     .xpath('@data-tweet-stat-count')\
                     .extract()
 
                 if replies:
-                    meta.add_value('replies', int(replies[0]))
+                    twitterSpecific.add_value('replies', int(replies[0]))
                 else:
-                    meta.add_value('replies', 0)
+                    twitterSpecific.add_value('replies', 0)
+
+                ### get meta data -----------------------------------------------
+
+                url = item.xpath('.//@data-permalink-path').extract()[0]
+                meta.add_value('url', url)
 
                 date_time = datetime.fromtimestamp(int(
                     item.xpath('.//div[@class="stream-item-header"]/small[@class="time"]/a/span/@data-time')
@@ -110,9 +116,13 @@ class TwitterSpider(CrawlSpider):
                     .strftime('%Y-%m-%d %H:%M:%S')
 
                 meta.add_value('datetime', date_time)
-                tweet.add_value('meta', meta.load_item())
+                # BUILD ITEM
+                siteSpecific.add_value('Twitter', twitterSpecific.load_item())
+                main.add_value('siteSpecific', siteSpecific.load_item())
+                main.add_value('postContent', post_content.load_item())
+                main.add_value('meta', meta.load_item())
 
-                yield tweet.load_item()
+                yield main.load_item()
 
             except:
                 logger.error("Error tweet:\n%s" % item.xpath('.').extract()[0])

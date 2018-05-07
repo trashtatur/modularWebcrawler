@@ -9,9 +9,4 @@ custom_settings = {
         #'webcrawler.pipelines.RabbitMQPipeline':100
         #'webcrawler.pipelines.WebcrawlerPipeline': 300,
     }
-
-
-
-
-
 }

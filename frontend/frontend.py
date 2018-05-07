@@ -1,10 +1,13 @@
+
 from flask import Flask, render_template, request
-import ModuleFactory
+from ModuleFactory import run_all_modules, stop_all_modules
 from SearchStrings import SEARCHSTRINGS
 from spiders.RegisteredModules import REGISTERED_MODULES
+from flask_socketio import SocketIO
 
 
 mood = Flask(__name__)
+#socketio = SocketIO(mood)
 
 
 @mood.route("/")
@@ -13,12 +16,18 @@ def main():
 
 
 @mood.route('/receiveData', methods=['POST'])
+#@socketio.on('receiveData')
 def startup():
     for thing in request.form:
         SEARCHSTRINGS[thing] = request.form[thing]
 
-    ModuleFactory.run_all_modules()
+    run_all_modules()
+    return "200"
 
+
+@mood.route("/stopCrawler", methods=['POST'])
+def stop_crawler():
+    stop_all_modules()
 
     return "200"
 

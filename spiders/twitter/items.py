@@ -1,32 +1,26 @@
-# -*- coding: utf-8 -*-
-
-# Define here the models for your scraped items
-from scrapy import Item, Field
-from scrapy.loader import ItemLoader
-from scrapy.loader.processors import TakeFirst
+from spiders.items import Item, ItemLoader, TakeFirst, Field
 
 
-class MetaItems(Item):
+class TwitterSpecific(Item):
     ID = Field()  # tweet id
-    datetime = Field()  # post time
     user_id = Field()  # user id
     retweets = Field()  # nbr of retweet
     favorites = Field()  # nbr of favorite
     replies = Field()  # nbr of reply
-    url = Field()  # tweet url
 
 
-class Tweet(Item):
-    usernameTweet = Field()  # username of tweet
-    text = Field()  # text content
-    meta = Field(serializer=MetaItems)
+class SiteSpecific(Item):
+    Twitter = Field(serializer=TwitterSpecific)
 
 
-class TweetLoader(ItemLoader):
-    default_item_class = Tweet
+#############
+
+
+class TwitterSpecificLoader(ItemLoader):
+    default_item_class = TwitterSpecific
     default_output_processor = TakeFirst()
 
 
-class MetaItemsLoader(ItemLoader):
-    default_item_class = MetaItems
+class SiteSpecificLoader(ItemLoader):
+    default_item_class = SiteSpecific
     default_output_processor = TakeFirst()

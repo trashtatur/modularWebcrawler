@@ -74,56 +74,85 @@ Scrapy Documentation: https://doc.scrapy.org/en/latest/
 A Module should always output in the following format:
 ```json
 {
-"some": "some",
-"keys": "keys",
-"here": "here",
-
-"meta": {
-    "someOther": "someOther",
-    "keysOrSo": "keysOrSo",
-    "hereOrWhat": "hereOrWhat"
+  "postContent":{
+    "user": "USERNAME",
+    "text":"RAW TEXT",
+    "cleanText": "CLEANED TEXT"
+  },
+  "meta": {
+    "URL": "http://www.heinz-wackelpudding.de",
+    "dateTime":"11.11.2011",
+    "lang":"en"
+  },
+  "siteSpecific":{
+    "MODULENAME":{
+      "here":"bla",
+      "are":"bla",
+      "some":"bla",
+      "site Specific":"bla",
+      "informations":"bla",
+      "like":"bla",
+      "retweets":"bla"
     }
+  },
+  "sentimentData": {
+    "Whatever":"bla",
+    "needs":"bla",
+    "to":"bla",
+    "be":"bla",
+    "here":"bla!!!"
+  }
 }
+
 ```
 This output can be ensured by defining items and itemloaders according to this format
-
+In the following examples ``MODULENAME`` is to be replaced with the actual Modulename!!!
 ```python
-from scrapy import Item, Field
-from scrapy.loader import ItemLoader
-from scrapy.loader.processors import TakeFirst
-
-class MetaItem(Item):
-    some = Field()
-    key = Field()
-    here = Field()
+from spiders.items import Item, ItemLoader, TakeFirst, Field
 
 
-class MainItem(Item):
-    some = Field()
-    key = Field()
-    here = Field()
-    meta = Field(serializer = MetaItem)
+class MODULENAMESpecific(Item):
+    ID = Field()  # tweet id
+    user_id = Field()  # user id
+    retweets = Field()  # nbr of retweet
+    favorites = Field()  # nbr of favorite
+    replies = Field()  # nbr of reply
 
 
-class MainLoader(ItemLoader):
-    default_item_class = MainItem
+class SiteSpecific(Item):
+    Twitter = Field(serializer=MODULENAMESpecific)
+
+
+#############
+
+
+class MODULENAMESpecificLoader(ItemLoader):
+    default_item_class = MODULENAMESpecific
     default_output_processor = TakeFirst()
 
 
-class MetaLoader(ItemLoader):
-    default_item_class = MetaItem
+class SiteSpecificLoader(ItemLoader):
+    default_item_class = SiteSpecific
     default_output_processor = TakeFirst()
 ```
 
 And then, such items can be populated in the following way
 
 ```python
-import MetaLoader
-import MainLoader
-main:MainLoader  = MainLoader()
-meta = MetaLoader()
-main.add_value('key', value)
-meta.add_value('key', value)
+from spiders.items import MetaItemsLoader, PostContentLoader, MainLoader
+from spiders.twitter.items import SiteSpecificLoader, MODULENAMESpecificLoader
+
+main = MainLoader()
+post_content = PostContentLoader()
+meta = MetaItemsLoader()
+siteSpecific = SiteSpecificLoader()
+MODULENAMESpecific = MODULENAMESpecificLoader()
+
+
+siteSpecific.add_value('MODULENAME', twitterSpecific.load_item())
+main.add_value('siteSpecific', siteSpecific.load_item())
+main.add_value('postContent', post_content.load_item())
 main.add_value('meta', meta.load_item())
+
 yield main.load_item()
 ```
