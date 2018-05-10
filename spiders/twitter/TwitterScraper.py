@@ -18,7 +18,7 @@ rabbit = RabbitMQPipeline()
 
 @register_module
 class TwitterSpider(CrawlSpider):
-    name = "TwitterSpider"
+    name = "Twitter"
     custom_settings = custom_settings
 
     def __init__(self):

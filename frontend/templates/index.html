@@ -20,22 +20,27 @@
             {% for module in moduleNames %}
             <th>{{module.name}}</th>
             {% endfor %}
+            <hr class="separator">
         </tr>
         <tr>
+
             {% for module in moduleNames %}
             <td>
                 <form>
                     <label>
-                        ACTIVATE: <input name="{{module.name}}" type="checkbox" checked>
+                        ACTIVATE: <input name="{{module.name}}" class="w3-check" type="checkbox" checked>
                     </label>
                     <label>
-                        <input type="text" placeholder="SUCHE" name="search1" id={{module.name}}>
+                        <input type="text" class="SearchStringModule" placeholder="SUCHE" name="search1" id={{module.name}}>
                     </label>
                 </form>
             </td>
             {% endfor %}
         </tr>
     </table>
+    <br>
+    <hr class="separator">
+    <br>
 </div>
 <button id="buttonStart" type="button" onclick=sendData()>SUBMIT CRAWL REQUESTS</button>
 <button id="buttonStop" type="button" onclick=stopCrawlers()>STOP ALL CRAWLERS</button>
