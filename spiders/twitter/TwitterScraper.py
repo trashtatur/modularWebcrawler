@@ -46,6 +46,7 @@ class TwitterSpider(CrawlSpider):
 
         items = page.xpath('//li[@data-item-type="tweet"]/div')
         for item in self.parse_tweet_item(items):
+            rabbit.process_item(item)
             yield item
 
     def parse_tweet_item(self, items):
@@ -124,8 +125,7 @@ class TwitterSpider(CrawlSpider):
                 main.add_value('postContent', post_content.load_item())
                 main.add_value('meta', meta.load_item())
 
-                #yield main.load_item()
-                rabbit.process_item(main.load_item())
+                yield main.load_item()
 
             except:
                 logger.error("Error tweet:\n%s" % item.xpath('.').extract()[0])
