@@ -25,7 +25,12 @@
             {% for module in moduleNames %}
             <td>
                 <form>
-                <label><input type="text" placeholder="SUCHE" name="search1" id={{module.name}}></label>
+                    <label>
+                        ACTIVATE: <input name="{{module.name}}" type="checkbox" checked>
+                    </label>
+                    <label>
+                        <input type="text" placeholder="SUCHE" name="search1" id={{module.name}}>
+                    </label>
                 </form>
             </td>
             {% endfor %}

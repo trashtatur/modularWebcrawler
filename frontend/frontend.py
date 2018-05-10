@@ -3,8 +3,7 @@ from flask import Flask, render_template, request
 from ModuleFactory import run_all_modules, stop_all_modules
 from SearchStrings import SEARCHSTRINGS
 from spiders.RegisteredModules import REGISTERED_MODULES
-from flask_socketio import SocketIO
-
+from flask_socketio import SocketIO, emit
 
 mood = Flask(__name__)
 socketio = SocketIO(mood)

@@ -14,8 +14,10 @@ var socket = io.connect('http://' + document.domain + ':' + location.port);
     var names = {};
     for (var i=0; i< tableWidth; i++) {
         var name = table.children[0].children[0].children[i].innerText;
-        var searchString = document.getElementById(name).value;
-        names[name]=searchString;
+        var isChecked = document.getElementsByName(name)[0].checked;
+        if (isChecked) {
+            names[name]=document.getElementById(name).value;
+        }
     }
 
     socket.emit('##SEND_DATA',{data : names})

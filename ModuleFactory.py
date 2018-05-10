@@ -3,6 +3,7 @@ import signal
 
 from scrapy.exceptions import CloseSpider
 
+from SearchStrings import SEARCHSTRINGS
 from spiders.RegisteredModules import REGISTERED_MODULES
 from scrapy.utils.log import configure_logging
 from twisted.internet import reactor
@@ -16,7 +17,7 @@ runner = CrawlerRunner(get_project_settings())
 
 def run_all_modules():
     configure_logging()
-    for module in REGISTERED_MODULES:
+    for module in cullModules():
         try:
             runner.crawl(module)
             logger.debug(module.name + " succesfully loaded")
@@ -34,3 +35,7 @@ def stop_all_modules():
 
 if __name__ == '__main__':
     run_all_modules()
+
+
+def cullModules():
+    return [module for module in REGISTERED_MODULES if module.name in SEARCHSTRINGS]
