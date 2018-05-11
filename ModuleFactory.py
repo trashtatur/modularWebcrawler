@@ -12,21 +12,27 @@ from scrapy.utils.project import get_project_settings
 import logging
 
 logger = logging.getLogger(__name__)
-runner = CrawlerRunner(get_project_settings())
 
 
 def run_all_modules():
-    configure_logging()
-    for module in cullModules():
-        try:
-            runner.crawl(module)
-            logger.debug(module.name + " succesfully loaded")
-        except:
-            logger.critical("Module " + module.name + " could not be started")
+    sorted_modules = cullModules()
 
-    d = runner.join()
-    d.addBoth(lambda _: reactor.stop())
-    reactor.run(installSignalHandlers=False)
+    configure_logging()
+    if len(sorted_modules) is not 0:
+        runner = CrawlerRunner(get_project_settings())
+        for module in sorted_modules:
+            try:
+                runner.crawl(module)
+                logger.debug(module.name + " succesfully loaded")
+            except:
+                logger.critical("Module " + module.name + " could not be started")
+
+        d = runner.join()
+        d.addBoth(lambda _: reactor.stop())
+        reactor.run(installSignalHandlers=False)
+
+    else:
+        logger.debug("No modules enabled, try again")
 
 
 def stop_all_modules():
