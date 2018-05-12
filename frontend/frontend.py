@@ -1,9 +1,9 @@
 
-from flask import Flask, render_template, request
-from ModuleFactory import run_all_modules, stop_all_modules
+from flask import Flask, render_template
+from ModuleStarter import run_all_modules, stop_all_modules
 from SearchStrings import SEARCHSTRINGS
 from spiders.RegisteredModules import REGISTERED_MODULES
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 
 mood = Flask(__name__)
 socketio = SocketIO(mood)

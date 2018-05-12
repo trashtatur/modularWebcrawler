@@ -1,8 +1,6 @@
 import os
 import signal
 
-from scrapy.exceptions import CloseSpider
-
 from SearchStrings import SEARCHSTRINGS
 from spiders.RegisteredModules import REGISTERED_MODULES
 from scrapy.utils.log import configure_logging
