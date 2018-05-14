@@ -1,6 +1,6 @@
 import os
 import signal
-
+from scrapy import Spider
 from SearchStrings import SEARCHSTRINGS
 from spiders.RegisteredModules import REGISTERED_MODULES
 from scrapy.utils.log import configure_logging
@@ -20,8 +20,13 @@ def run_all_modules():
         runner = CrawlerRunner(get_project_settings())
         for module in sorted_modules:
             try:
-                runner.crawl(module)
-                logger.debug(module.name + " succesfully loaded")
+                bla = issubclass(module, Spider)
+                if bla:
+                    runner.crawl(module)
+                    logger.debug(module.name + " succesfully loaded")
+                else:
+                    module.run()
+                    logger.debug(module.name + " succesfully loaded")
             except:
                 logger.critical("Module " + module.name + " could not be started")
 
@@ -34,11 +39,7 @@ def run_all_modules():
 
 
 def stop_all_modules():
-    os.kill(os.getpid(), signal.SIGSTOP)
-
-
-if __name__ == '__main__':
-    run_all_modules()
+    os.kill(os.getpid(), signal.SIGKILL)
 
 
 def cullModules():

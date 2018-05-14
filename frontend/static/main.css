@@ -38,6 +38,14 @@ button:hover {
     color: darkgray;
 }
 
+#scrapyConsoleOut {
+    display: block;
+    height: 240px;
+    max-height: 240px;
+    overflow-y: auto;
+    border-color: aqua;
+}
+
 table {
     border-collapse: collapse;
 }
