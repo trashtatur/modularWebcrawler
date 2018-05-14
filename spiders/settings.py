@@ -7,7 +7,6 @@ custom_settings = {
     "LOG_LEVEL": 'INFO',
     "DOWNLOAD_DELAY": 2,
     "ITEM_PIPELINES": {
-        #'webcrawler.pipelines.RabbitMQPipeline':100
-        #'webcrawler.pipelines.WebcrawlerPipeline': 300,
+        'pipelines.ConsolePipe': 100
     }
 }
