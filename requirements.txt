@@ -1,4 +1,7 @@
+wtforms
 scrapy
 flask
 pika
 flask-socketio
+flask-login
+flask-wtf

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="static/login.css">
+    <title>MOOD APP - Login</title>
+</head>
+<body>
+<div id="formContainer">
+    <h2>MOOD APP</h2>
+    <form method="POST" action="/login">
+        {{ form.hidden_tag() }}<br>
+        {{ form.username.label }}: {{ form.username}}<br>
+        {{ form.password.label }}: {{ form.password}}<br>
+        {{ form.submit.label}}: {{form.submit}}<br>
+    </form>
+</div>
+</body>
+</html>

@@ -2,7 +2,7 @@ custom_settings = {
     "BOT_NAME": 'MoodCrawler',
     "SPIDER_MODULES": ['webcrawler.spiders'],
     "NEWSPIDER_MODULE": 'webcrawler.spiders',
-    "USER_AGENT": 'webcrawler (www.yourcoon.de) by HAW Hamburg germany',
+    "USER_AGENT": "Googlebot",
     "ROBOTSTXT_OBEY": True,
     "LOG_LEVEL": 'INFO',
     "DOWNLOAD_DELAY": 2,
