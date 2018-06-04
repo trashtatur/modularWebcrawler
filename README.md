@@ -2,12 +2,6 @@
 
 - Dependancies : 
     - Install with ``pip install -r requirements.txt --user``
-    
-     ``scrapy``
-    
-     ``flask``
-     
-     ``pika``
      
 ## Start the App
 
