@@ -24,14 +24,15 @@ class TwitterSpider(CrawlSpider):
     def __init__(self):
         self.lang = "en"
         self.query = SEARCHSTRINGS[TwitterSpider.name]
-        self.url = "https://twitter.com/search?q=%s&src=typed&max_position=%s"
+        self.url = "https://twitter.com/i/search/timeline?l={}".format(self.lang)
+        self.url += "&q=%s&src=typed&max_position=%s"
 
     def start_requests(self):
         url = self.url % (quote(self.query), '')
-        yield http.Request(url,
-                           callback=self.parse_page)
+        yield http.Request(url, callback=self.parse_page)
 
     def parse_page(self, response):
+
         data = json.loads(response.body.decode("utf-8"))
         for item in self.parse_tweets_block(data['items_html']):
             yield item

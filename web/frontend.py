@@ -1,6 +1,6 @@
 import flask
 from web.config import Config
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 from flask_login import LoginManager, login_required, login_user, current_user
 from ModuleStarter import run_all_modules, stop_all_modules
 from SearchStrings import SEARCHSTRINGS
